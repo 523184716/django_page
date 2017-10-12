@@ -34,5 +34,8 @@ def  Index(request):
     except Exception,e:
         return redirect('/app02/login/')
 def Loginout(request):
-    del request.session['is_login']
+    try:
+        del request.session['is_login']
+    except Exception,e:
+        pass
     return redirect('/app02/login/')
