@@ -17,8 +17,10 @@ def Login(request):
             request.session['is_login'] = {'user':user}
             return  redirect('/app02/index/')
         else:
+            ##django 1.8.2
             return render_to_response('app02/login.html',{'status':"用户名和密码不对"},c)
-
+            ##之前版本
+            #return render_to_response('app02/login.html', {'status': "用户名和密码不对"}, context_instance=RequestContext(request))
     return render_to_response('app02/login.html',c)
 
 def  Index(request):
