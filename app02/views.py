@@ -4,9 +4,11 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from  django.shortcuts import render_to_response,redirect
 # Create your views here.
-
-
+from  django.template.context import RequestContext
+from django.template.context_processors import csrf
 def Login(request):
+    c = {}
+    c.update(csrf(request))
     if request.method == "POST":
         user = request.POST.get('username',None)
         pwd = request.POST.get('password',None)
@@ -15,9 +17,9 @@ def Login(request):
             request.session['is_login'] = {'user':user}
             return  redirect('/app02/index/')
         else:
-            return render_to_response('app02/login.html',{'status':"用户名和密码不对"})
+            return render_to_response('app02/login.html',{'status':"用户名和密码不对"},c)
 
-    return render_to_response('app02/login.html')
+    return render_to_response('app02/login.html',c)
 
 def  Index(request):
     try:
