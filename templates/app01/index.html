@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        <style>
+            body
+            {
+                font-size: .85em;
+                font-family:  "Trebuchet MS", Verdana, Helvetica, SansSerif;
+                color: #232323;
+                background-color: #fff;
+            }
+            #Pageing A{
+                background-color: #008844;
+                text-decoration:none; color:White;
+                padding: .1em .6em .2em .6em;
+            }
+            #Pageing A.selected{ background-color: #AA7700;}
+        </style>
+</head>
+<body>
+    <h3>django数据分页展示</h3>
+    <table border="1">
+        {% for itme in data %}
+            <tr>
+                <td>{{ itme.hostname }}</td>
+                <td>{{ itme.IP }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <table>
+        <tr>
+            <td>
+                每页显示:
+{#                <select id="group" onclick="doajax();">#}
+                <select id="group" onchange='ChangePageItem(this);'>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
+            </td>
+            <td></td>
+            <td>
+                <div>总条数:{{ count }}</div>
+            </td>
+        </tr>
+    </table>
+    <div id="Pageing">
+        {{ page }}
+    </div>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.cookie.min.js"></script>
+    <script type="text/javascript">
+        $( function () {
+            var page_itme = $.cookie("per_itme")
+            if(page_itme){
+                $('#group').val(page_itme)
+            }
+            else {
+                $.cookie("per_itme",10,{ path: '/'})
+            }
+            }
+        )
+        function ChangePageItem(arg) {
+            var page_itme = $(arg).val();
+            $.cookie("per_itme",page_itme,{ path: '/'});
+        }
+{#        function doajax() {#}
+{#            var temp = $('#group').val();#}
+{#            $.ajax({#}
+{#                url:"/app01/index/1/",#}
+{#                method:'GET',#}
+{#                data:{'data':temp},#}
+{#                success:function(arg) {#}
+{#                    console.log(arg)#}
+{#                    console.log(temp)#}
+{#                    console.log("success")#}
+{#                },#}
+{#                error:function() {#}
+{#                    console.log("failed");#}
+{#                },#}
+{#            }#}
+{#            );#}
+{#        }#}
+    </script>
+</body>
+</html>
