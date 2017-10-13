@@ -67,6 +67,23 @@
             var page_itme = $(arg).val();
             $.cookie("per_itme",page_itme,{ path: '/'});
         }
+{#        ###############}
+{#     下面这段内容提供了django在ajax进行post请求时，把csrftoken值随请求一起传入后台，防止出现跨站请求伪造#}
+{#        var csrftoken = $.cookie('csrftoken');#}
+{#        function csrfSafeMethod(method) {#}
+{#            //these Http methods do not require csrf protection#}
+{#            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));#}
+{#        }#}
+{#        $.ajaxSetup({#}
+{#            beforeSend: function (xhr,settings) {#}
+{#                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {#}
+{#                    xhr.setRequestHeader("X.CSRFToken",csrftoken);#}
+{#                }#}
+{#            }#}
+{#        });#}
+
+{#        ###############}
+
 {#        function doajax() {#}
 {#            var temp = $('#group').val();#}
 {#            $.ajax({#}

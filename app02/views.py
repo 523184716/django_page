@@ -6,6 +6,9 @@ from  django.shortcuts import render_to_response,redirect
 # Create your views here.
 from  django.template.context import RequestContext
 from django.template.context_processors import csrf
+
+##导入跨站请求伪造局部生效的两个方法
+from  django.views.decorators.csrf import csrf_exempt,csrf_protect
 def Login(request):
     c = {}
     c.update(csrf(request))
@@ -23,6 +26,8 @@ def Login(request):
             #return render_to_response('app02/login.html', {'status': "用户名和密码不对"}, context_instance=RequestContext(request))
     return render_to_response('app02/login.html',c)
 
+@csrf_protect   #当全局没有设置跨站请求伪造保护时，加上这个装饰器可以强制加上这个功能
+@csrf_exempt    #当全局有开启跨站请求伪造保护时，设置这个可以让这个方法强制取消
 def  Index(request):
     try:
         user_dict = request.session['is_login']
