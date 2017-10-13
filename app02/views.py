@@ -9,6 +9,22 @@ from django.template.context_processors import csrf
 
 ##导入跨站请求伪造局部生效的两个方法
 from  django.views.decorators.csrf import csrf_exempt,csrf_protect
+
+def checklogin(func):
+    def wrapper(request,*args,**kwargs):
+        try:
+            print request.session['is_login']
+            if  request.session['is_login']:
+                return func(request,*args,**kwargs)
+            else:
+                print 33333
+                return redirect('/app02/login/')
+        except Exception, e:
+            print e
+            print 2222
+            return redirect('/app02/login/')
+    return wrapper
+
 def Login(request):
     print "views.login"
     c = {}
@@ -29,16 +45,13 @@ def Login(request):
 
 # @csrf_protect   #当全局没有设置跨站请求伪造保护时，加上这个装饰器可以强制加上这个功能
 # @csrf_exempt    #当全局有开启跨站请求伪造保护时，设置这个可以让这个方法强制取消
-def  Index(request):
-    try:
-        user_dict = request.session['is_login']
-        if user_dict:
-            #user = request.session.get['is_login']
-            return render_to_response('app02/index.html',user_dict)
-        else:
-            return  redirect('/app02/login/')
-    except Exception,e:
-        return redirect('/app02/login/')
+@checklogin
+def  Index(request,*args,**kwargs):
+    print 11111
+    print args[0]
+    #print kwargs['page']
+    return render_to_response('app02/index.html')
+
 def Loginout(request):
     try:
         del request.session['is_login']

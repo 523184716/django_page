@@ -136,4 +136,4 @@ STATICFILES_DIRS = (('css',os.path.join(STATIC_ROOT,'css')),
                     ('js',os.path.join(STATIC_ROOT,'js')),
                     )
 
-SESSION_COOKIE_AGE = 10
+#SESSION_COOKIE_AGE = 10

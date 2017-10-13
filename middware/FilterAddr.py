@@ -13,8 +13,8 @@ class FilterAddress(MiddlewareMixin):
     def process_request(self,request):
         print "process_request"
         IPaddr = request.META['REMOTE_ADDR']
-        if IPaddr == "127.0.0.1":
-            return render_to_response('error404.html')
+        # if IPaddr == "127.0.0.1":
+        #     return render_to_response('error404.html')
 
     def process_view(self,request, view_func, view_args, view_kwargs):
         print "process_view"

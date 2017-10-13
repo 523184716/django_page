@@ -20,6 +20,6 @@ urlpatterns = [
     #url(r'^admin/', admin.site.urls),
    # url(r'^index/1', First_Page),
     url(r'^login/', Login),
-    url(r'^index/', Index),
+    url(r'^index/(\d*)', Index),
     url(r'^loginout/', Loginout),
 ]
