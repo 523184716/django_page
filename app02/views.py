@@ -17,11 +17,9 @@ def checklogin(func):
             if  request.session['is_login']:
                 return func(request,*args,**kwargs)
             else:
-                print 33333
                 return redirect('/app02/login/')
         except Exception, e:
             print e
-            print 2222
             return redirect('/app02/login/')
     return wrapper
 
@@ -47,7 +45,6 @@ def Login(request):
 # @csrf_exempt    #当全局有开启跨站请求伪造保护时，设置这个可以让这个方法强制取消
 @checklogin
 def  Index(request,*args,**kwargs):
-    print 11111
     print args[0]
     #print kwargs['page']
     return render_to_response('app02/index.html')
