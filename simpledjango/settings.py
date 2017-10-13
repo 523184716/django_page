@@ -49,6 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middware.FilterAddr.FilterAddress',
+    'middware.FilterAddr.FilterAddress2',
 ]
 
 ROOT_URLCONF = 'simpledjango.urls'
