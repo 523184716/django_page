@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from views import Index
+from views import Index,DecratorTest
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
    # url(r'^index/1', First_Page),
     url(r'^index/(\d*)', Index),
+    url(r'^decrator/', DecratorTest),
 ]

@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
+from .views import Index,Add,Getrply,SubmitRply,Login,Submitchat,Getchat,Getchatnew
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^app01/', include('app01.urls')),
-    url(r'^app02/', include('app02.urls')),
-    url(r'^bbschat/', include('BBSchat.urls')),
-
+    url(r'^index/(\d*)', Index),
+    url(r'^add/', Add),
+    url(r'^getrply/', Getrply),
+    url(r'^submitrply/', SubmitRply),
+    url(r'^login/', Login),
+    url(r'^submitchat/', Submitchat),
+    url(r'^getchat/', Getchat),
+    url(r'^getchatnew/', Getchatnew),
 ]

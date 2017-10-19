@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/static/css/common.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+            <style>
+            body
+            {
+                font-size: .85em;
+                font-family:  "Trebuchet MS", Verdana, Helvetica, SansSerif;
+                color: #232323;
+                background-color: #fff;
+            }
+            #Pageing A{
+                background-color: #008844;
+                text-decoration:none; color:White;
+                padding: .1em .6em .2em .6em;
+            }
+            #Pageing A.selected{ background-color: #AA7700;}
+        </style>
+</head>
+<body >
+    <div class="pg-header">
+        <div class="head-menu">
+            <a href="/" class="digg-logo"></a>
+        </div>
+        <div class="action-menu">
+            <a href="/bbschat/index/" class="tb active">全部</a>
+            <a href="/bbschat/index/" class="tb">42区</a>
+            <a href="/bbschat/index/" class="tb">老男孩</a>
+            <a href="/bbschat/index/" class="tb">屌丝</a>
+        </div>
+        <div class="header-search">
+
+        </div>
+    </div>
+    <div class="pg-body">
+        {% for items in data %}
+            <div class="itmes">
+                <div class="part1">
+                    <a href="{{ items.url }}">{{ items.title }}</a>
+                </div>
+                <div class="part2">
+                    {{ items.summary }}
+                </div>
+                <div class="part3">
+                    <a id=favor_count href="#" onclick="favor(this,{{ items.id }})">赞{{ items.favor_count}}</a>
+                    <a id=reply_count href="#" onclick='Reply(this,{{ items.id }})'>回复{{ items.reply_count }}</a>
+                    <span>{{ items.create_date|date:"Y-m-d H:i:s" }}</span>
+                </div>
+                <div has-input="0" class="part4 hide" hidden="hidden">
+                    <div id="div1" class="replys">aa</div>
+                    <div class="input">
+                        <label>请输入回复内容：</label>
+                        <textarea></textarea>
+                        <input type="button" value="提交" onclick="SubmitRply(this,{{ items.id }})">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div id="Pageing" class="page">
+            {{ page }}
+        </div>
+        <div class="right chat">
+            <div class="title">
+                新热榜 v0.1
+            </div>
+            <div id="chatpool" class="content">
+            </div>
+            <div class="bottom" >
+                <div class="left_msg" >
+                    <textarea id="message" class="text" style="width: 320px"></textarea>
+                </div>
+                <div class="left submit" >
+                    <input type="button" class="btn" style="width: 80px;height: 40px" value="发送" onclick="SendMsg()" >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pg-footer">
+
+    </div>
+    <!--遮罩层开始-->
+    <div id="shade" class="shade "></div>
+    <!--遮罩层结束-->
+    <!--加载层开始-->
+    <div id="loading" class="loading "></div>
+    <!--加载层结束-->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.cookie.min.js"></script>
+    <script type="text/javascript">
+        var csrftoken = $.cookie('csrftoken');
+        function csrfSafeMethod(method) {
+            //these Http methods do not require csrf protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function (xhr,settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X.CSRFToken",csrftoken);
+                }
+            }
+        });
+
+        function favor(doc,id) {
+            $.ajax({
+                url:"/bbschat/add/",
+                type:"POST",
+                data:{nid:id,csrftoken:csrftoken},
+                success: function(args) {
+                    obj = jQuery.parseJSON(args)
+                    if (obj.status == 1) {
+                        temp = "赞" + obj.data;
+                        $(doc).text(temp);
+                        console.log(obj.status);
+                        }
+                    else {
+                        console.log(obj.message);
+                        alert(obj.message);
+                    }
+                },
+            });
+        }
+        function Reply(doc,id) {
+{#            var test = $(doc).parent().next().children("replys").val();#}
+            var test = $(doc).parent().next().find("div").eq(0).text();
+            $.ajax({
+                url:"/bbschat/getrply/",
+                data:{nid:id},
+                type:"POST",
+                success: function(args) {
+                    var obj = jQuery.parseJSON(args);
+                    console.log(obj)
+{#                    #清空当前div下面的值#}
+                    $(doc).parent().next().find('div').eq(0).empty(),
+{#                    #.each第一个变量是字典类型的对象，第二个循环第一个,可以通过console.log()来调试 #}
+                    $.each(obj,function (k,v) {
+                        temp = "<div>"+v.user__username+": "+v.content+"----"+v.create_date+"</div>";
+{#                        temp = v.content#}
+                        console.log(temp)
+                        console.log(test)
+{#                        #找到那个div，如果下面还有很多div，通过find("div"),获取到所有的div,.eq(0),获取第一个#}
+                        $(doc).parent().next().find('div').eq(0).append(temp)
+                    })
+                }
+            });
+{#            #匹配那个div,隐藏这个div以及div下面的内容#}
+            $(doc).parent().next().toggle('hide');
+        }
+
+        function SubmitRply(doc,id) {
+            var submitcontent = $(doc).prev().val()
+            var test = $(doc).parent().prev().text()
+            var test1 = $(doc).parent().parent().prev().find('a[id=reply_count]').text()
+            $("#shade,loading").removeClass("hide");
+            $.ajax({
+                url:"/bbschat/submitrply/",
+                type:"POST",
+                data:{nid:id,data:submitcontent},
+                success:function (args) {
+                    var obj = jQuery.parseJSON(args)
+                    reply_count = "回复" + obj.reply_count
+                    $(doc).parent().parent().prev().find('a[id=reply_count]').text(reply_count)
+                    var obj = jQuery.parseJSON(obj.data)[0]
+                    console.log(reply_count)
+                    temp = "<div>"+obj.user__username+": "+obj.content+"----"+obj.create_date+"</div>"
+{#                    console.log(obj)#}
+{#                    console.log(test1)#}
+                    $(doc).parent().prev().append(temp)
+                    $(doc).prev().val('')
+{#                    console.log(args);#}
+{#                    console.log(submitcontent);#}
+                    $("#shade,loading").addClass("hide");
+                },
+                error:function () {
+                    console.log("failed")
+                },
+
+            });
+
+        }
+
+        function SendMsg() {
+            var value = $("#message").val();
+            $('#message').val('');
+{#            $("#chatpool").append(value);#}
+            $.ajax({
+                url:"/bbschat/submitchat/",
+                data:{data:value},
+                type:"POST",
+                success:function (args) {
+                    var obj = jQuery.parseJSON(args)
+                    window.last_id = obj.data.id
+                    if (obj.status == 0){
+                        temp = "<div>"+"<div>"+ obj.data.user +": " + "-----" + obj.data.create_date + "</div>"+"<div>"+obj.data.content +"</div>"+"</div>"
+                        $("#chatpool").append(temp)
+                        var height = document.getElementById("chatpool").scrollHeight;
+                        $("#chatpool").scrollTop(height);
+                    }
+                    else {
+                        alert (obj.data.message)
+                    }
+                },
+            });
+        }
+        setInterval('going()',2000);
+        window.is_first = "True";
+        function going() {
+            if (window.is_first == "True"){
+                $.ajax({
+                    url:"/bbschat/getchat",
+                    type:"GET",
+                    success:function (args) {
+                        var obj = jQuery.parseJSON(args)
+                        window.last_id = obj[0].id
+                        var obj = obj.reverse()
+                        $.each(obj,function (k,v) {
+                            var content = v.content;
+                            var user = v.user__username;
+                            var date = v.crete_date
+                            var temp = "<div>"+"<div>"+user+"---"+date+"</div>"+"<div>"+content+"</div>"+"</div>"
+                            $("#chatpool").append(temp)
+                        })
+                    },
+                }),
+                window.is_first = "False";
+                var height = document.getElementById("chatpool").scrollHeight;
+                $("#chatpool").scrollTop(height);
+            }
+            else {
+                $.ajax({
+                    url:"/bbschat/getchatnew/",
+                    data:{lastid:window.last_id},
+                    type:"POST",
+                    success:function (args) {
+                        var obj = jQuery.parseJSON(args);
+                        if (obj.length > 0){
+                            window.last_id = obj[obj.length-1].id;
+                            $.each(obj,function (k,v) {
+                                var content = v.content;
+                                var user = v.user__username;
+                                var date = v.crete_date;
+                                var temp = "<div>" + "<div>" + user + "---" + date + "</div>" + "<div>" + content + "</div>" + "</div>"
+                                $("#chatpool").append(temp)
+                            })
+                        }
+                    },
+                });
+                var height = document.getElementById("chatpool").scrollHeight;
+                $("#chatpool").scrollTop(height);
+            }
+        }
+    </script>
+</body>
+</html>

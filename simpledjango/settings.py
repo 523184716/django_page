@@ -39,18 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app01',
     'app02',
+    'BBSchat',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middware.FilterAddr.FilterAddress',
-    'middware.FilterAddr.FilterAddress2',
+    #'middware.FilterAddr.FilterAddress',
+    #'middware.FilterAddr.FilterAddress2',
 ]
 
 ROOT_URLCONF = 'simpledjango.urls'
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'simpledjango.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "pythonpage",
+        'NAME': "bbschat",
         'HOST': "10.36.3.74",
         'USER': "root",
         'PASSWORD': "123456",
@@ -134,6 +135,7 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static')
 STATICFILES_DIRS = (('css',os.path.join(STATIC_ROOT,'css')),
                     ('assets',os.path.join(STATIC_ROOT,'assets')),
                     ('js',os.path.join(STATIC_ROOT,'js')),
+                    ('images',os.path.join(STATIC_ROOT,'images')),
                     )
 
 #SESSION_COOKIE_AGE = 10

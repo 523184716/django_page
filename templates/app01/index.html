@@ -21,7 +21,15 @@
 </head>
 <body>
     <h3>django数据分页展示</h3>
+    <form action="/app01/index/" method="POST">
+        <input name="searchvalue" placeholder="主机名称" type="text" size="10*21">
+        <input type="submit" value="搜索">
+    </form>
     <table border="1">
+        <tr>
+            <td>主机名称</td>
+            <td>IP地址</td>
+        </tr>
         {% for itme in data %}
             <tr>
                 <td>{{ itme.hostname }}</td>

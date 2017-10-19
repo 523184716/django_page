@@ -27,16 +27,16 @@ class FilterAddress(MiddlewareMixin):
         return  response
 
 
-class FilterAddress2(MiddlewareMixin):
-    def process_request(self,request):
-        print "2process_request"
-
-    def process_view(self,request, view_func, view_args, view_kwargs):
-        print "2process_view"
-
-    def process_exception(self,request,exception):
-        print "2process_exception"
-
-    def process_response(self,request,response):
-        print "2process_response"
-        return  response
+# class FilterAddress2(MiddlewareMixin):
+#     def process_request(self,request):
+#         print "2process_request"
+#
+#     def process_view(self,request, view_func, view_args, view_kwargs):
+#         print "2process_view"
+#
+#     def process_exception(self,request,exception):
+#         print "2process_exception"
+#
+#     def process_response(self,request,response):
+#         print "2process_response"
+#         return  response
